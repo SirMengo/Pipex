@@ -1,27 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/20 11:58:34 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/09 14:19:31 by msimoes          ###   ########.fr       */
+/*   Created: 2025/04/11 12:19:12 by msimoes           #+#    #+#             */
+/*   Updated: 2025/06/09 14:25:41 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
-# include <stdio.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <sys/wait.h>
+#include "libft.h"
 
-# include "srcs/ft_printf/ft_printf.h"
-# include "srcs/libft/libft.h"
+void	*ft_calloc(size_t n, size_t size)
+{
+	void	*ptr;
+	size_t	mult;
 
-void	error(void);
-void	cmd_exec(char *argv, char *envp[]);
-
-#endif
+	if (n == 0 || size == 0)
+		return (malloc(0));
+	mult = n * size;
+	if (n > INT_MAX / size)
+		return (NULL);
+	ptr = malloc(mult);
+	if (!ptr)
+		return (NULL);
+	ft_bzero(ptr, mult);
+	return (ptr);
+}

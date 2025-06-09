@@ -6,7 +6,7 @@
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 11:38:17 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/09 12:15:20 by msimoes          ###   ########.fr       */
+/*   Updated: 2025/06/09 13:26:05 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*find_path(char	*envp[], char *cmd)
 	return(0);
 }
 
-void	cmd_exec(char argv, char *envp[])
+void	cmd_exec(char *argv, char *envp[])
 {
 	char	*path;
 	char	**cmd;

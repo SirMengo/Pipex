@@ -1,27 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/20 11:58:34 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/09 14:19:31 by msimoes          ###   ########.fr       */
+/*   Created: 2025/04/11 11:56:43 by msimoes           #+#    #+#             */
+/*   Updated: 2025/06/09 14:25:34 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
-# include <stdio.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <sys/wait.h>
+#include "libft.h"
 
-# include "srcs/ft_printf/ft_printf.h"
-# include "srcs/libft/libft.h"
+void	ft_bzero(void *str, size_t n)
+{
+	size_t			i;
+	unsigned char	*ptr;
 
-void	error(void);
-void	cmd_exec(char *argv, char *envp[]);
-
-#endif
+	ptr = (unsigned char *)str;
+	i = 0;
+	while (i < n)
+	{
+		ptr[i] = 0;
+		i++;
+	}
+}
