@@ -6,7 +6,7 @@
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 11:58:34 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/09 14:19:31 by msimoes          ###   ########.fr       */
+/*   Updated: 2025/06/10 12:36:50 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <stdlib.h>
 # include <sys/wait.h>
 
-# include "srcs/ft_printf/ft_printf.h"
+//# include "srcs/ft_printf/ft_printf.h"
 # include "srcs/libft/libft.h"
 
 void	error(void);
