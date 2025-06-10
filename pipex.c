@@ -6,7 +6,7 @@
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 13:06:26 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/10 12:42:12 by msimoes          ###   ########.fr       */
+/*   Updated: 2025/06/10 13:33:29 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	child_process(char *argv[], char *envp[], int *fd)
 {
 	int	file1;
+
 	file1 = open(argv[1], O_RDONLY);
 	if (file1 < 0)
 		error();
@@ -29,7 +30,7 @@ void	child_process(char *argv[], char *envp[], int *fd)
 void	parent_process(char *argv[], char *envp[], int *fd)
 {
 	int	file2;
-	
+
 	file2 = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (file2 < 0)
 		error();
@@ -59,4 +60,6 @@ int	main(int argc, char *argv[], char *envp[])
 			waitpid(proc_id, NULL, 0);
 		}
 	}
+	else
+		write(1, "Invalid number of arguments", 27);
 }

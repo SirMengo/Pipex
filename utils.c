@@ -6,13 +6,13 @@
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 11:38:17 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/09 13:26:05 by msimoes          ###   ########.fr       */
+/*   Updated: 2025/06/10 14:24:42 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	*find_path(char	*envp[], char *cmd)
+static char	*find_path(char	*envp[], char *cmd)
 {
 	int		i;
 	char	**paths;
@@ -59,7 +59,7 @@ void	cmd_exec(char *argv, char *envp[])
 			i++;
 			free(cmd[i]);
 		}
-		free(cmd);
+		free(cmd); 
 		error();
 	}
 	if (execve(path, cmd, envp) == -1)
