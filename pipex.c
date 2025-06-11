@@ -6,7 +6,7 @@
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 13:06:26 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/10 13:33:29 by msimoes          ###   ########.fr       */
+/*   Updated: 2025/06/11 15:49:34 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,20 +46,33 @@ int	main(int argc, char *argv[], char *envp[])
 {
 	int		fd[2];
 	pid_t	proc_id;
-	
+	pid_t	proc_id2;
+
+	char *a;
 	if (argc == 5)
 	{
 		if (pipe(fd) == -1)
 			error();
 		proc_id = fork();
 		if (proc_id == 0)
+		{
 			child_process(argv, envp, fd);
+			exit(-1);
+		}
 		else
 		{	
-			parent_process(argv, envp, fd);
-			waitpid(proc_id, NULL, 0);
+			proc_id2 = fork();
+			if (proc_id2 == 0)
+			{
+				parent_process(argv, envp, fd);
+			}
 		}
+		close(fd[0]);
+		close(fd[1]);
+		waitpid(proc_id2, NULL, 0);
+		waitpid(proc_id, NULL, 0);
 	}
 	else
 		write(1, "Invalid number of arguments", 27);
+	return(0);
 }
