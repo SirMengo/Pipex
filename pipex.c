@@ -6,13 +6,13 @@
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 13:06:26 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/11 15:49:34 by msimoes          ###   ########.fr       */
+/*   Updated: 2025/06/16 12:23:17 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	child_process(char *argv[], char *envp[], int *fd)
+void	child_process1(char *argv[], char *envp[], int *fd)
 {
 	int	file1;
 
@@ -27,7 +27,7 @@ void	child_process(char *argv[], char *envp[], int *fd)
 	close(fd[1]);
 }
 
-void	parent_process(char *argv[], char *envp[], int *fd)
+void	child_process2(char *argv[], char *envp[], int *fd)
 {
 	int	file2;
 
@@ -45,32 +45,28 @@ void	parent_process(char *argv[], char *envp[], int *fd)
 int	main(int argc, char *argv[], char *envp[])
 {
 	int		fd[2];
-	pid_t	proc_id;
-	pid_t	proc_id2;
+	pid_t	proc_id[2];
 
-	char *a;
 	if (argc == 5)
 	{
 		if (pipe(fd) == -1)
 			error();
-		proc_id = fork();
-		if (proc_id == 0)
+		proc_id[0] = fork();
+		if (proc_id[0] == 0)
 		{
-			child_process(argv, envp, fd);
+			child_process1(argv, envp, fd);
 			exit(-1);
 		}
 		else
 		{	
-			proc_id2 = fork();
-			if (proc_id2 == 0)
-			{
-				parent_process(argv, envp, fd);
-			}
+			proc_id[1] = fork();
+			if (proc_id[1] == 0)
+				child_process2(argv, envp, fd);
 		}
 		close(fd[0]);
 		close(fd[1]);
-		waitpid(proc_id2, NULL, 0);
-		waitpid(proc_id, NULL, 0);
+		waitpid(proc_id[1], NULL, 0);
+		waitpid(proc_id[0], NULL, 0);
 	}
 	else
 		write(1, "Invalid number of arguments", 27);

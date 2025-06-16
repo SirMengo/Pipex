@@ -6,7 +6,7 @@
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 11:38:17 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/11 15:21:54 by msimoes          ###   ########.fr       */
+/*   Updated: 2025/06/16 12:23:48 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,12 @@ static char	*find_path(char	*envp[], char *cmd)
 	char	*add_path;
 
 	i = 0;
-	//if !env
+	if (!envp)
+		error();
 	while(ft_strnstr(envp[i], "PATH", 4) == 0)
+	{
 		i++;
+	}
 	//if !envp[i]
 	paths = ft_split(envp[i] + 5, ':');
 	i = 0;
