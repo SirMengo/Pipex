@@ -6,11 +6,19 @@
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 13:06:26 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/16 12:23:17 by msimoes          ###   ########.fr       */
+/*   Updated: 2025/06/17 11:56:57 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	close_files(int *fd, int file)
+{
+	if (close(fd[0]) < 0 || close(fd[1]) < 0)
+		error();
+	if (close(file))
+		error();
+}
 
 void	child_process1(char *argv[], char *envp[], int *fd)
 {
@@ -19,12 +27,12 @@ void	child_process1(char *argv[], char *envp[], int *fd)
 	file1 = open(argv[1], O_RDONLY);
 	if (file1 < 0)
 		error();
-	dup2(file1, STDIN_FILENO);
-	dup2(fd[1], STDOUT_FILENO);
-	close(fd[0]);
-	close(file1);
+	if (dup2(file1, STDIN_FILENO) < 0)
+		error();
+	if (dup2(fd[1], STDOUT_FILENO) < 0)
+		error();
+	close_files(fd, file1);
 	cmd_exec(argv[2], envp);
-	close(fd[1]);
 }
 
 void	child_process2(char *argv[], char *envp[], int *fd)
@@ -34,12 +42,17 @@ void	child_process2(char *argv[], char *envp[], int *fd)
 	file2 = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (file2 < 0)
 		error();
-	dup2(fd[0], STDIN_FILENO);
-	dup2(file2, STDOUT_FILENO);
-	close(fd[1]);
-	close(file2);
+	if (dup2(fd[0], STDIN_FILENO) < 0)
+		error();
+	if (dup2(file2, STDOUT_FILENO) < 0)
+		error();
+	close_files(fd, file2);
 	cmd_exec(argv[3], envp);
-	close(fd[0]);
+}
+void	ft_wait(pid_t *proc_id)
+{
+	waitpid(proc_id[1], NULL, 0);
+	waitpid(proc_id[0], NULL, 0);
 }
 
 int	main(int argc, char *argv[], char *envp[])
@@ -55,7 +68,7 @@ int	main(int argc, char *argv[], char *envp[])
 		if (proc_id[0] == 0)
 		{
 			child_process1(argv, envp, fd);
-			exit(-1);
+			exit(1);
 		}
 		else
 		{	
@@ -63,12 +76,10 @@ int	main(int argc, char *argv[], char *envp[])
 			if (proc_id[1] == 0)
 				child_process2(argv, envp, fd);
 		}
-		close(fd[0]);
-		close(fd[1]);
-		waitpid(proc_id[1], NULL, 0);
-		waitpid(proc_id[0], NULL, 0);
+		if (close(fd[0]) < 0 || close(fd[1]) < 0)
+			error();
+		ft_wait(proc_id);
 	}
 	else
 		write(1, "Invalid number of arguments", 27);
-	return(0);
 }
