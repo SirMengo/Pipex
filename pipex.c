@@ -6,7 +6,7 @@
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 13:06:26 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/17 15:21:54 by msimoes          ###   ########.fr       */
+/*   Updated: 2025/06/18 15:55:49 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,38 +48,44 @@ void	child_process2(char *argv[], char *envp[], int *fd)
 	exit(EXIT_FAILURE);
 }
 
-void	ft_wait(pid_t *proc_id)
+int	ft_wait(pid_t *proc_id)
 {
-	waitpid(proc_id[1], NULL, 0);
+	int	status;
+	int	exit_code;
+
+	exit_code = 0;
+	waitpid(proc_id[1], &status, 0);
+	if (WIFEXITED (status))
+		exit_code = WEXITSTATUS(status);
 	waitpid(proc_id[0], NULL, 0);
+	return (exit_code);
 }
 
 int	main(int argc, char *argv[], char *envp[])
 {
 	int		fd[2];
+	int		exit_code;
 	pid_t	proc_id[2];
 
+	exit_code = 1;
 	if (argc == 5)
 	{
 		if (pipe(fd) == -1)
 			error();
 		proc_id[0] = fork();
 		if (proc_id[0] == 0)
-		{
 			child_process1(argv, envp, fd);
-			exit(EXIT_FAILURE);
-		}
 		else
-		{	
+		{
 			proc_id[1] = fork();
 			if (proc_id[1] == 0)
 				child_process2(argv, envp, fd);
 		}
 		if (close(fd[0]) < 0 || close(fd[1]) < 0)
 			error();
-		ft_wait(proc_id);
+		exit_code = ft_wait(proc_id);
 	}
 	else
 		write(1, "Invalid number of arguments", 27);
-	return (0);
+	return (exit_code);
 }

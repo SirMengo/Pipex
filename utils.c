@@ -6,7 +6,7 @@
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 11:38:17 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/17 16:03:21 by msimoes          ###   ########.fr       */
+/*   Updated: 2025/06/18 15:53:24 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,68 +24,69 @@ void	free_str(char **str)
 	free(str);
 }
 
-static char	*find_path(char	*envp[], char *cmd)
+static char	*popu_paths(char **paths, char **s_cmd, char *path, char *add_path)
 {
-	int		i;
-	char	**paths;
-	char	*path;
-	char	*add_path;
-	char	**s_cmd;
+	int	i;
 
 	i = 0;
-	if (!envp && !*envp)
-		error();
-	while(ft_strnstr(envp[i], "PATH", 4) == 0)
-		i++;
-	if (!envp[i])
-		return(NULL);
-	paths = ft_split(envp[i] + 5, ':');
-	i = 0;
-	s_cmd = ft_split(cmd, ' ');
-	while(paths[i])
+	while (paths[i])
 	{
 		add_path = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(add_path,s_cmd[0]);
+		path = ft_strjoin(add_path, s_cmd[0]);
 		free(add_path);
 		if (access(path, F_OK | X_OK) == 0)
 		{
 			free_str(s_cmd);
+			free_str(paths);
 			return (path);
 		}
 		free(path);
 		i++;
 	}
-	i = -1;
-	free(paths);
+	free_str(paths);
 	free_str(s_cmd);
-	return(cmd);
+	return (NULL);
+}
+
+static char	*find_path(char	*envp[], char *cmd)
+{
+	int		i;
+	char	**paths;
+	char	**s_cmd;
+	char	*path;
+	char	*add_path;
+
+	path = NULL;
+	add_path = NULL;
+	i = 0;
+	if (!envp && !*envp)
+		error();
+	while (ft_strnstr(envp[i], "PATH", 4) == 0)
+		i++;
+	if (!envp[i])
+		return (NULL);
+	paths = ft_split(envp[i] + 5, ':');
+	s_cmd = ft_split(cmd, ' ');
+	return (popu_paths(paths, s_cmd, path, add_path));
+	return (cmd);
 }
 
 void	cmd_exec(char *argv, char *envp[])
 {
 	char	*path;
 	char	**cmd;
-	int		i;
 
-	i = -1;
 	cmd = ft_split(argv, ' ');
+	if (!cmd || !cmd[0] || cmd[0][0] == '\0')
+		not_found(cmd);
 	path = find_path(envp, cmd[0]);
 	if (!path)
+		not_found(cmd);
+	if (path == cmd[0] && !ft_strchr(cmd[0], '/'))
+		not_found(cmd);
+	if (execve(path, cmd, envp) == -1)
 	{
-		while(cmd[i])
-		{
-			i++;
-			free(cmd[i]);
-		}
-		free(cmd); 
+		free_str(cmd);
 		error();
 	}
-	if (execve(path, cmd, envp) == -1)
-		error();
-}
-
-void	error()
-{
-	perror("ERROR");
-	exit(EXIT_FAILURE);
 }

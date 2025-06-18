@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/05/20 11:58:34 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/18 16:01:01 by msimoes          ###   ########.fr       */
+/*   Created: 2025/06/18 14:53:57 by msimoes           #+#    #+#             */
+/*   Updated: 2025/06/18 15:53:59 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
-# include <stdio.h>
-# include <fcntl.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <sys/wait.h>
+#include "pipex.h"
 
-# include "srcs/libft.h"
+void	not_found(char **cmd)
+{
+	free_str(cmd);
+	write(2, "ERROR: Command not found\n", 26);
+	exit(127);
+}
 
-void	cmd_exec(char *argv, char *envp[]);
-void	error(void);
-void	not_found(char **cmd);
-void	free_str(char **str);
-
-#endif
+void	error(void)
+{
+	perror("ERROR");
+	exit(EXIT_FAILURE);
+}

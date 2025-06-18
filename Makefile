@@ -6,14 +6,15 @@
 #    By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/04/08 12:46:46 by msimoes           #+#    #+#              #
-#    Updated: 2025/06/11 15:31:13 by msimoes          ###   ########.fr        #
+#    Updated: 2025/06/18 16:01:59 by msimoes          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = pipex
-SRCS = pipex.c utils.c \
-		./srcs/libft/ft_bzero.c ./srcs/libft/ft_calloc.c ./srcs/libft/ft_split.c \
-		./srcs/libft/ft_strjoin.c ./srcs/libft/ft_strlen.c ./srcs/libft/ft_strnstr.c
+SRCS = pipex.c utils.c errors.c \
+		./srcs/ft_bzero.c ./srcs/ft_calloc.c ./srcs/ft_split.c \
+		./srcs/ft_strjoin.c ./srcs/ft_strlen.c \
+		./srcs/ft_strnstr.c ./srcs/ft_strchr.c
 
 COMP_LIB = ar rcs
 RM = rm -f
