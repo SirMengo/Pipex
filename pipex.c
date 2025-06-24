@@ -6,7 +6,7 @@
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/20 13:06:26 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/18 15:55:49 by msimoes          ###   ########.fr       */
+/*   Updated: 2025/06/24 15:38:13 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,11 @@ void	child_process1(char *argv[], char *envp[], int *fd)
 
 	file1 = open(argv[1], O_RDONLY);
 	if (file1 < 0)
+	{
+		close(fd[0]);
+		close(fd[1]);
 		error();
+	}
 	dup2(file1, STDIN_FILENO);
 	dup2(fd[1], STDOUT_FILENO);
 	close_files(fd, file1);
@@ -40,7 +44,11 @@ void	child_process2(char *argv[], char *envp[], int *fd)
 
 	file2 = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (file2 < 0)
+	{
+		close(fd[0]);
+		close(fd[1]);
 		error();
+	}
 	dup2(fd[0], STDIN_FILENO);
 	dup2(file2, STDOUT_FILENO);
 	close_files(fd, file2);
