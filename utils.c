@@ -6,7 +6,7 @@
 /*   By: msimoes <msimoes@student.42lisboa.com>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/03 11:38:17 by msimoes           #+#    #+#             */
-/*   Updated: 2025/06/18 16:15:27 by msimoes          ###   ########.fr       */
+/*   Updated: 2025/08/05 15:35:54 by msimoes          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	free_str(char **str)
 	free(str);
 }
 
-static char	*popu_paths(char **paths, char **s_cmd, char *path, char *add_path)
+static char	*popu_paths(char **paths, char *cmd, char *path, char *add_path)
 {
 	int	i;
 
@@ -32,11 +32,11 @@ static char	*popu_paths(char **paths, char **s_cmd, char *path, char *add_path)
 	while (paths[i])
 	{
 		add_path = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(add_path, s_cmd[0]);
+		path = ft_strjoin(add_path, cmd);
 		free(add_path);
 		if (access(path, F_OK | X_OK) == 0)
 		{
-			free_str(s_cmd);
+			free(cmd);
 			free_str(paths);
 			return (path);
 		}
@@ -44,7 +44,7 @@ static char	*popu_paths(char **paths, char **s_cmd, char *path, char *add_path)
 		i++;
 	}
 	free_str(paths);
-	free_str(s_cmd);
+	free(cmd);
 	return (NULL);
 }
 
@@ -52,7 +52,6 @@ static char	*find_path(char	*envp[], char *cmd)
 {
 	int		i;
 	char	**paths;
-	char	**s_cmd;
 	char	*path;
 	char	*add_path;
 
@@ -68,8 +67,7 @@ static char	*find_path(char	*envp[], char *cmd)
 	if (!envp[i])
 		return (NULL);
 	paths = ft_split(envp[i] + 5, ':');
-	s_cmd = ft_split(cmd, ' ');
-	return (popu_paths(paths, s_cmd, path, add_path));
+	return (popu_paths(paths, cmd, path, add_path));
 	return (cmd);
 }
 
